@@ -1,0 +1,4 @@
+flask==2.3.3
+flask-restful==0.3.9
+flask-cors==3.1.1
+

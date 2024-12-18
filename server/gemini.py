@@ -107,6 +107,23 @@ def save_json_to_file(response_text, filename='output.json'):
         print("Error decoding JSON:", e)
 
 
+def parse_json_from_text(response_text):
+    print("NOTE: Parsing JSON from response text")
+
+    # Strip the Markdown code block and extra whitespace
+    json_str = response_text.strip("```json\n").strip("\n```")
+
+    # Parse the string into a JSON object
+    try:
+        parsed_json = json.loads(json_str)
+
+        print("NOTE: JSON data has been parsed successfully")
+        return parsed_json  # Return the parsed JSON object
+
+    except json.JSONDecodeError as e:
+        print("Error decoding JSON:", e)
+        return None  # Return None in case of erro
+
 def create_roadmap(website_url): 
     job_description = scrape_website(website_url)
 
@@ -116,8 +133,13 @@ def create_roadmap(website_url):
 
     job_json = description_into_json(job_description)
 
+    # if job_json is not None:
+    #     pretty_json = save_json_to_file(job_json)
+    #     print(pretty_json)
+
     if job_json is not None:
-        pretty_json = save_json_to_file(job_json)
-        print(pretty_json)
+        pretty_json = parse_json_from_text(job_json)
+        return(pretty_json) 
+
 
 

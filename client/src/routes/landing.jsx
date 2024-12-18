@@ -1,5 +1,10 @@
-import { Button } from "@/components/ui/button"
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+
 export default function Landing() {
+    const [data, setData] = useState(null); // Store API response data
+    const navigate = useNavigate();
 
     const isValidURL = (string) => {
         try {
@@ -8,43 +13,43 @@ export default function Landing() {
         } catch (_) {
             return false;
         }
-    }
+    };
 
-    const localhost = 'http://127.0.0.1:5000/'
+    const localhost = "http://127.0.0.1:5000";
 
     const handleSubmit = async (e) => {
-        e.preventDefault()
-        const value = e.target[0].value
+        e.preventDefault();
+        const value = e.target[0].value;
 
-        // check to see if value is a valid url 
+        // Validate URL
         if (!isValidURL(value)) {
-            alert("Please enter a valid URL")
-            return
+            alert("Please enter a valid URL");
+            return;
         }
 
         try {
-            // send the url as a post request to the backend 
-            const response = await fetch(localhost + 'api/jobs', {
-                method: 'POST',
+            // Send POST request to backend
+            const response = await fetch(localhost + "/api/jobs", {
+                method: "POST",
                 headers: {
-                    'Content-Type': 'application/json'
+                    "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ url: value })
-            })
+                body: JSON.stringify({ url: value }),
+            });
 
             if (!response.ok) {
-                throw new Error('Failed to fetch data')
+                throw new Error("Failed to fetch data");
             }
-            const data = await response.json()
-            console.log(data)
 
-        }
-        catch (error) {
+            const result = await response.json();
+            setData(result); // Save response data
+            navigate("/mapping", { state: { treeData: result } }); // Navigate to Tree page
+
+        } catch (error) {
             console.error("Error submitting URL:", error.message);
             alert("Failed to submit the URL. Please try again.");
         }
-
-    }
+    };
 
     return (
         <div>
@@ -58,7 +63,6 @@ export default function Landing() {
                     Submit
                 </Button>
             </form>
-
         </div>
-    )
+    );
 }

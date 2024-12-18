@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
 from gemini import create_roadmap
-from tree import json_into_tree
+from tree import json_into_tree, map_json_to_tree
 from flask_cors import CORS 
 
 
@@ -14,23 +14,22 @@ def home():
     return "Hello, World!"
 
 #post request for handing the url 
-@app.route('/api/jobs', methods=['POST'])
-
+@app.route('/api/jobs', methods=['POST', 'OPTIONS'])
 def convert(): 
+    if request.method == 'OPTIONS':
+        return '', 200  # Respond to preflight requests
+
+
     try: 
         data = request.get_json() 
         url = data.get('url')
         if not url or not is_valid_url(url):
             return jsonify({"error": "Invalid or missing URL"}), 400
         
-        create_roadmap(url) 
-        json_into_tree()
-
-        return jsonify({
-            "message": "URL received successfully",
-            "url": url
-        }), 200
-    
+        json = create_roadmap(url) 
+        syllabus_tree = json_into_tree(json)
+        return jsonify(syllabus_tree.to_dict())
+        
     except Exception as e:
         # Handle unexpected errors
         return jsonify({"error": "An internal server error occurred", "details": str(e)}), 500

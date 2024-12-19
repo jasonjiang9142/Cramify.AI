@@ -18,29 +18,25 @@ def is_valid_url(website_url):
 def is_job_url(title, page_text, url): 
 
     #chage text to lower case and intialize variables
-    page_text = page_text.lower() 
     title = title.lower()
     job_keywords = {"description", "apply", "qualification", "qualifications" "job", "pay", "required qualification", "preferred qualification", "skill", "experience", 
                         "intern", "pay", 'application', 'job application', "requirements", "requirement"} 
     
     # Normalize spaces and use word boundaries to ensure whole word matches
-    def contains_keyword(text, keywords):
-        text = re.sub(r'\s+', ' ', text)  
-        return any(re.search(r'\b' + re.escape(keyword) + r'\b', text) for keyword in keywords)
-
+    def normalize_and_tokenize(text):
+        text = re.sub(r'\s+', ' ', text.lower())  # Normalize whitespace
+        return set(text.split())
     # Check for job-specific keywords in the title or page text
-    job_related = contains_keyword(title, job_keywords) or contains_keyword(page_text, job_keywords)
+    title_words = normalize_and_tokenize(title)
+    page_words = normalize_and_tokenize(page_text)
 
-    # Check if the URL suggests a job posting (e.g., "/jobs/" or "/careers/")
+    job_related = not job_keywords.isdisjoint(title_words) or not job_keywords.isdisjoint(page_words)
+
+    # Check if the URL suggests a job posting
     parsed_url = urlparse(url)
-    job_related_url = 'jobs' in parsed_url.path or 'careers' in parsed_url.path or 'job' in parsed_url.path
+    job_related_url = any(keyword in parsed_url.path for keyword in {"jobs", "careers", "job"})
 
-    if job_related and job_related_url:
-        return True
-    
-    return False 
-
-
+    return job_related and job_related_url
 
 # Function to scrape the website
 def scrape_website(website_url): 
@@ -56,7 +52,9 @@ def scrape_website(website_url):
     # Try to scrape the URL now
     try: 
         # Initialize Selenium WebDriver
-        driver = webdriver.Chrome()
+        options = webdriver.ChromeOptions()
+        options.add_argument('--headless')
+        driver = webdriver.Chrome(options=options)
         driver.get(website_url)
 
         # Wait until the page's body is present to ensure it has loaded
@@ -66,20 +64,18 @@ def scrape_website(website_url):
 
         print("Finding elements...")
 
-        
         title = driver.title
 
         # Wait for the page to load content
         body = driver.find_element(By.TAG_NAME, 'body')
-        for _ in range(5): 
+
+        for _ in range(3): 
             body.send_keys(Keys.END)
-            time.sleep(2) 
+            time.sleep(1) 
 
-        # After scrolling, grab the entire page source
-        page_source = driver.page_source
+        # After scrolling, grab the  page source and parse the API
+        soup = BeautifulSoup(driver.page_source, 'html.parser')
 
-        # Parse the HTML using BeautifulSoup
-        soup = BeautifulSoup(page_source, 'html.parser')
 
         # Extract all the text content from the page (simulating top-to-bottom scraping)
         job_description = soup.get_text(separator='\n', strip=True).lower() 
@@ -106,5 +102,6 @@ def scrape_website(website_url):
         driver.quit()
 
 # Run the scraper
-#scrape_website()
+#url = "https://standard.wd1.myworkdayjobs.com/en-US/Search/job/Portland-OR/Enterprise-Architecture-Software-Engineer-Intern_REQ005248"
+#scrape_website(url)
 

@@ -70,7 +70,6 @@ def json_into_tree(json_data):
     
     # Load JSON data
     #json_data = load_json()
-
     # Convert JSON data into a tree structure
     syllabus_tree = map_json_to_tree(json_data)
 

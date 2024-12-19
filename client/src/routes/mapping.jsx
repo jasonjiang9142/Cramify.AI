@@ -1,8 +1,11 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useLocation } from "react-router-dom";
 import Tree from "react-d3-tree";
+import { useNavigate } from "react-router-dom";
 
-const renderCustomNode = ({ nodeDatum }) => {
+const renderCustomNode = ({ nodeDatum, navigate }) => {
+
+
     // Function to split text into multiple lines if it's too long (e.g., 20 chars per line)
     const wrapText = (text, maxLineLength) => {
         const words = text.split(" ");
@@ -26,8 +29,14 @@ const renderCustomNode = ({ nodeDatum }) => {
     const nodeWidth = maxLineWidth * 8; // Approx width per character
     const nodeHeight = lines.length * 18 + 20; // Height based on lines
 
+    // Handle click event to navigate
+    const handleClick = () => {
+        console.log(nodeDatum.name)
+        navigate(`/mapping/${nodeDatum.name}`, { state: nodeDatum.name }); // Dynamically navigate based on the node's name or id
+    };
+
     return (
-        <g >
+        <g onClick={handleClick} >
             <rect
                 x={-nodeWidth / 2}
                 y={-nodeHeight / 2}
@@ -40,6 +49,7 @@ const renderCustomNode = ({ nodeDatum }) => {
                 strokeWidth="1"
                 className='text-center px-3'
             />
+
             <text
                 fill="black"
                 strokeWidth="1"
@@ -70,6 +80,7 @@ const Mapping = () => {
     const { treeData } = location.state || {};
     const [selectedNode, setSelectedNode] = useState(null);
     const [filteredTreeData, setFilteredTreeData] = useState(treeData);
+    const navigate = useNavigate();
 
     const treeWrapperRef = useRef(null);
 
@@ -122,7 +133,7 @@ const Mapping = () => {
             <Tree
                 data={filteredTreeData}
                 orientation="vertical"
-                renderCustomNodeElement={renderCustomNode}
+                renderCustomNodeElement={(props) => renderCustomNode({ ...props, navigate })}
                 pathFunc="curve"
                 customNodeSize={customNodeSize}
                 zoom={0.7}

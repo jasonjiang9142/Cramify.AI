@@ -42,6 +42,8 @@ const renderCustomNode = ({ nodeDatum, navigate }) => {
         navigate(`/mapping/${updatedName}`, { state: nodeDatum.name }); // Dynamically navigate based on the node's name or id
     };
 
+
+
     return (
         <g onClick={handleClick} >
             <rect

@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify, make_response
-from gemini import create_roadmap, topic_name_into_gemini
+from gemini import create_roadmap, topic_name_into_gemini, description_into_json, parse_json_from_text
 from tree import json_into_tree, map_json_to_tree
 from flask_cors import CORS 
 import json
@@ -36,8 +36,8 @@ def convert_get():
 
 
 #post request for handing the url 
-@app.route('/api/jobs', methods=["POST", "OPTIONS"])
-def convert(): 
+@app.route('/api/jobs/link', methods=["POST", "OPTIONS"])
+def convert_link(): 
     if request.method == "OPTIONS": # CORS preflight
         return _build_cors_preflight_response()
     
@@ -55,6 +55,31 @@ def convert():
         except Exception as e:
             # Handle unexpected errors
             return jsonify({"error": "An internal server error occurred", "details": str(e)}), 500
+
+#post request for handing the url 
+@app.route('/api/jobs/text', methods=["POST", "OPTIONS"])
+def convert_text(): 
+    if request.method == "OPTIONS": # CORS preflight
+        return _build_cors_preflight_response()
+    
+    elif request.method == "POST": 
+        try: 
+            data = request.get_json() 
+            job_description = data.get('url')
+            if not job_description: 
+                return jsonify({"error": "Invalid or missing Value"}), 400
+            
+            job_json = description_into_json(job_description)
+            if job_json is not None:
+                pretty_json = parse_json_from_text(job_json)
+                
+            syllabus_tree = json_into_tree(pretty_json)
+            return jsonify(syllabus_tree.to_dict())
+        
+        except Exception as e:
+            # Handle unexpected errors
+            return jsonify({"error": "An internal server error occurred", "details": str(e)}), 500
+
 
 
 # Helper function to validate URL

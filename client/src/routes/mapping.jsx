@@ -95,9 +95,19 @@ const Mapping = () => {
 
     useEffect(() => {
         if (treeData && treeData.children && treeData.children.length > 0) {
-            const firstNode = treeData.children[0].name;
-            setSelectedNode(firstNode);
-            setFilteredTreeData([treeData.children[0]]);
+            const savedNode = localStorage.getItem("selectedNode"); // Retrieve from localStorage
+
+            if (savedNode) {
+                setSelectedNode(savedNode); // Set the saved node as selected
+                const subtree = treeData.children.find((node) => node.name === savedNode);
+                if (subtree) {
+                    setFilteredTreeData([subtree]); // Show the subtree of the selected node
+                }
+            } else {
+                const firstNode = treeData.children[0].name; // Default to first node
+                setSelectedNode(firstNode); // Set the first node as selected
+                setFilteredTreeData([treeData.children[0]]); // Show the first node's subtree
+            }
         }
     }, [treeData]);
 
@@ -116,6 +126,7 @@ const Mapping = () => {
     const [translation, setTranslation] = useState({ x: 500, y: 300 });
 
     if (!treeData) {
+        navigate('/');
         return <div>No tree data to display</div>;
     }
 
@@ -123,19 +134,21 @@ const Mapping = () => {
         const selectedValue = e.target.value;
         setSelectedNode(selectedValue);
 
+        // Save the selected node to localStorage
+        localStorage.setItem("selectedNode", selectedValue);
+
         const subtree = treeData.children.find((node) => node.name === selectedValue);
         if (subtree) {
-            setFilteredTreeData([subtree]);
+            setFilteredTreeData([subtree]); // Only display the selected subtree
         }
     };
-
 
     return (
         <div
             id="treeWrapper"
             ref={treeWrapperRef}
             style={{ width: "100%", height: "100vh" }}
-            className="flex flex-col bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-600"
+            className="flex flex-col bg-gradient-to-r from-blue-200 via-indigo-200 to-purple-200"
         >
             {/* Header */}
             <div className="text-center py-6">

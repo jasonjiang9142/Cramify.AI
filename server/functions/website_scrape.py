@@ -40,7 +40,6 @@ def is_job_url(title, page_text, url):
 
 # Function to scrape the website
 def scrape_website(website_url): 
-    
     # Validate the URL
     try:
         is_valid_url(website_url)
@@ -82,10 +81,9 @@ def scrape_website(website_url):
         
         #check to see if the url is a valid website url 
         if not is_job_url(title, job_description, website_url): 
-            raise Exception("There is an error trying to access this website. Please try another method instead")
+            return None
 
-        print("\nPage Content Scraped (Top to Bottom):")
-        print(job_description)
+        print("\nPage Content Scraped")
         return job_description
 
         
@@ -104,4 +102,5 @@ def scrape_website(website_url):
 # Run the scraper
 #url = "https://standard.wd1.myworkdayjobs.com/en-US/Search/job/Portland-OR/Enterprise-Architecture-Software-Engineer-Intern_REQ005248"
 #scrape_website(url)
+
 

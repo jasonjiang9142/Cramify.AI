@@ -1,6 +1,5 @@
 import requests
 import json
-from website_scrape import scrape_website
 from dotenv import load_dotenv
 import os
 import google.generativeai as genai
@@ -108,20 +107,7 @@ def parse_json_from_text(response_text):
     except json.JSONDecodeError as e:
         print("Error decoding JSON:", e)
         return None  # Return None in case of erro
-
-def create_roadmap(website_url): 
-    job_description = scrape_website(website_url)
-
-    if job_description is None:
-        print("Failed to scrape website or job description.")
-        return
-
-    job_json = description_into_json(job_description)
-
-    if job_json is not None:
-        pretty_json = parse_json_from_text(job_json)
-        return(pretty_json) 
-
+    
 #---------
 
 # Function to turn the topic_name into a gemini information
@@ -134,9 +120,7 @@ def topic_name_into_gemini(topic_name):
     
     
     prompt = f"""
- Please create a detailed review or cram sheet for the topic of {topic_name}. The cram sheet should include a comprehensive yet concise summary of the following key aspects:
-
-Focusing on the most essential points that would be useful for someone studying or preparing for an exam or practical application of the skill/topic.
+ Please create a detailed review or cram sheet for the topic of {topic_name}. The cram sheet should be very comprehensive and detailed where someone with little information about the topic will be able to learn fully. 
 Format the Cram Sheet as JSON. The JSON format should follow this structure but feel free to include as many points as appropriate to concisely organize the info:
 {{
   "topic": "{topic_name}",

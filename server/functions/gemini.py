@@ -4,11 +4,12 @@ from dotenv import load_dotenv
 import os
 import google.generativeai as genai
 
+
+
 load_dotenv()
 
 # Access environment variables
 api_key = os.getenv('API_KEY')
-
 
 # Function to call the gemini API
 def call_gemini_api(prompt):
@@ -70,25 +71,6 @@ def description_into_json(description):
         print("No response data received or an error occurred.")
         return None
     
-
-def save_json_to_file(response_text, filename='output.json'):
-    print("NOTE: Saving JSON to file")
-
-    # Strip the Markdown code block and extra whitespace
-    json_str = response_text.strip("```json\n").strip("\n```")
-
-    # Parse the string into a JSON object
-    try:
-        parsed_json = json.loads(json_str)
-
-        # Save the JSON data to a file
-        with open(filename, 'w') as json_file:
-            json.dump(parsed_json, json_file, indent=4)
-
-        print(f"NOTE: JSON data has been saved to {filename}")
-    
-    except json.JSONDecodeError as e:
-        print("Error decoding JSON:", e)
 
 
 def parse_json_from_text(response_text):

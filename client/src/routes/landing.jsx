@@ -26,7 +26,7 @@ export default function Landing() {
 
         e.preventDefault();
         const value = e.target[0].value;
-        setLoading(true)
+
 
         // Validate URL
         if (!isValidURL(value)) {
@@ -34,6 +34,7 @@ export default function Landing() {
             return;
         }
         try {
+            setLoading(true)
             // Send POST request to backend
             const response = await fetch(localhost + "/api/jobs/link", {
                 method: "POST",

@@ -100,6 +100,7 @@ const Mapping = () => {
             if (savedNode) {
                 setSelectedNode(savedNode); // Set the saved node as selected
                 const subtree = treeData.children.find((node) => node.name === savedNode);
+                console.log(subtree)
                 if (subtree) {
                     setFilteredTreeData([subtree]); // Show the subtree of the selected node
                 }
@@ -138,6 +139,7 @@ const Mapping = () => {
         localStorage.setItem("selectedNode", selectedValue);
 
         const subtree = treeData.children.find((node) => node.name === selectedValue);
+
         if (subtree) {
             setFilteredTreeData([subtree]); // Only display the selected subtree
         }

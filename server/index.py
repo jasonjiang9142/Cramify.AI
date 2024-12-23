@@ -4,11 +4,10 @@ from flask_cors import CORS
 import json
 from routes.landing import landing_route
 from routes.moreinfo import more_info_route
-import redis
+from functions.redis import client, get_cache
 
 
 app = Flask(__name__)
-client = redis.Redis(host='localhost', port=6379, db=0, decode_responses=True) #connect to redis 
 CORS(app, resources=r'/api/*', headers='Content-Type')
 
 app.register_blueprint(landing_route, url_prefix='/api/jobs')
@@ -21,19 +20,9 @@ def _build_cors_preflight_response():
     response.headers.add('Access-Control-Allow-Methods', "*")
     return response
 
-def get_cache(key): 
-    try: 
-        cache_data = client.get(key) 
-        if cache_data: 
-            return json.loads(cache_data) 
-    except redis.RedisError as e:
-        print("Error getting information from the cache")
-    return None 
 
 @app.route('/')
 def home():
-    #create_roadmap() 
-    #json_into_tree()
     return "Hello, World!"
 
 

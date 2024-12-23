@@ -90,25 +90,48 @@ const Mapping = () => {
     const [selectedNode, setSelectedNode] = useState(null);
     const [filteredTreeData, setFilteredTreeData] = useState(treeData);
     const navigate = useNavigate();
+    const [loading, setLoading] = useState(true);
 
     const treeWrapperRef = useRef(null);
 
     useEffect(() => {
-        if (treeData && treeData.children && treeData.children.length > 0) {
-            const savedNode = localStorage.getItem("selectedNode"); // Retrieve from localStorage
+        setLoading(true); // Start loading
 
-            if (savedNode) {
-                setSelectedNode(savedNode); // Set the saved node as selected
-                const subtree = treeData.children.find((node) => node.name === savedNode);
-                console.log(subtree)
-                if (subtree) {
-                    setFilteredTreeData([subtree]); // Show the subtree of the selected node
+        try {
+            // Ensure treeData is defined and has children before proceeding
+            if (treeData && treeData.children && treeData.children.length > 0) {
+                const getFirstNode = () => {
+                    const firstNode = treeData.children[0]; // Default to first node
+                    setSelectedNode(firstNode.name); // Set the first node as selected
+                    setFilteredTreeData([firstNode]); // Show the first node's subtree
+                };
+
+                const savedNode = localStorage.getItem("selectedNode"); // Retrieve saved node
+
+                if (savedNode) {
+                    setSelectedNode(savedNode); // Set the saved node as selected
+                    const subtree = treeData.children.find(
+                        (node) => node.name === savedNode
+                    );
+
+                    if (subtree) {
+                        setFilteredTreeData([subtree]); // Show the subtree of the selected node
+                    } else {
+                        console.warn("Saved node not found in tree data.");
+                        getFirstNode();
+                    }
+                } else {
+                    getFirstNode();
                 }
             } else {
-                const firstNode = treeData.children[0].name; // Default to first node
-                setSelectedNode(firstNode); // Set the first node as selected
-                setFilteredTreeData([treeData.children[0]]); // Show the first node's subtree
+                console.warn("Tree data or children are missing.");
+                navigate('/'); // Redirect if tree data is invalid
             }
+        } catch (error) {
+            console.error("An error occurred:", error); // Log error if exception occurs
+            navigate('/'); // Redirect to home
+        } finally {
+            setLoading(false); // Stop loading
         }
     }, [treeData]);
 
@@ -124,7 +147,7 @@ const Mapping = () => {
         }
     }, [treeWrapperRef]);
 
-    const [translation, setTranslation] = useState({ x: 500, y: 300 });
+    const [translation, setTranslation] = useState({ x: window.innerWidth / 2, y: 50 });
 
     if (!treeData) {
         navigate('/');
@@ -144,6 +167,25 @@ const Mapping = () => {
             setFilteredTreeData([subtree]); // Only display the selected subtree
         }
     };
+
+    if (loading) {
+        return (
+            <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-gray-100 to-blue-50">
+                <div className="flex flex-col items-center space-y-4">
+                    <div className="relative w-16 h-16">
+                        <div className="absolute inset-0 rounded-full border-4 border-t-blue-500 border-gray-200 animate-spin"></div>
+                    </div>
+                    <h1 className="text-lg font-medium text-gray-700 animate-pulse">
+                        Processing your request...
+                    </h1>
+                    <p className="text-sm text-gray-500">
+                        Sit tight! Our AI is hard at work analyzing your submission. Estimated time is 30 seconds.
+                    </p>
+                </div>
+            </div>
+        );
+    }
+
 
     return (
         <div

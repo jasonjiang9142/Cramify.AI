@@ -1,4 +1,4 @@
-import redis
+import redis, json
 
 client = redis.Redis(
     host='localhost',  # Change if using remote Redis
@@ -7,4 +7,12 @@ client = redis.Redis(
     decode_responses=True  # Returns strings instead of bytes
 )
 
-print(client.ping())
+
+def get_cache(key): 
+    try: 
+        cache_data = client.get(key) 
+        if cache_data: 
+            return json.loads(cache_data) 
+    except redis.RedisError as e:
+        print("Error getting information from the cache")
+    return None 

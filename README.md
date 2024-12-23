@@ -41,6 +41,31 @@
 
 Click the image to watch the demo video on YouTube.
 
+## Environment Variables
+
+This project requires an **API key** for accessing the **Google Gemini API**. The key is stored securely in a `.env` file. Follow the steps below to configure your environment:
+
+### **Setup Instructions**
+
+1. **Create the `.env` file**  
+   Copy the provided `.env.template` file and rename it to `.env`:  
+   ```bash
+   cp .env.template .env
+2. Add Your API Key
+   Open the .env file in your preferred editor and replace #your-google-api-key with your actual API key:
+   ```bash
+   API_KEY=your-google-api-key
+   ```
+
+   Example Configuration:
+   ```bash
+   API_KEY=AIzaSyEXAMPLE12345
+   ```
+3. Save and Close
+   Make sure to save the changes before closing the file.
+
+
+
 ## Installation
 
 1. Clone the repository:  

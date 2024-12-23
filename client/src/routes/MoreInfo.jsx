@@ -1,18 +1,26 @@
-
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
+import { Switch } from "@/components/ui/switch"
+import { Label } from "@/components/ui/label"
+import { use } from "react";
+
 
 export default function MoreInfo() {
     const location = useLocation();
     const name = location.state || '';
+
     const localhost = "http://127.0.0.1:5000";
     const navigate = useNavigate();
+
 
     const [info, setInfo] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [currentSectionIndex, setCurrentSectionIndex] = useState(0); // Track the current section index
+    const [isComprehensiveView, setIsComprehensiveView] = useState(false);
+
 
     useEffect(() => {
         const getData = async () => {
@@ -44,12 +52,29 @@ export default function MoreInfo() {
         getData();
     }, [name]);
 
-    // useEffect(() => {
-    //     setInfo(example);
-    //     setLoading(false);
-    // }, []);
+    const handlePrevious = () => {
+        setCurrentSectionIndex((prevIndex) => Math.max(prevIndex - 1, 0));
+    };
+
+    const handleNext = () => {
+        setCurrentSectionIndex((prevIndex) =>
+            info && prevIndex < info.sections.length - 1 ? prevIndex + 1 : prevIndex
+        );
+    };
 
 
+    const handlePreviousPage = () => {
+        navigate(-1);
+    };
+
+    const handleNextPage = () => {
+        navigate(1);
+    };
+
+    const handleSwitchChange = () => {
+        console.log("Switching view");
+        setIsComprehensiveView(prev => !prev);
+    };
 
     const renderSection = (section) => (
         <div key={section.heading} className="my-8">
@@ -143,12 +168,9 @@ export default function MoreInfo() {
         );
     }
 
-
     return (
         <div className="container mx-auto px-6 py-10">
             {/* Go Back Button */}
-
-
             <Button onClick={() => navigate(-1)} type="submit" variant="default" className="mb-6 inline-flex items-center justify-center px-6 py-3 text-white bg-indigo-600 hover:bg-indigo-700 rounded-full shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all duration-300">
                 <svg className="w-5 h-5 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" />
@@ -156,164 +178,54 @@ export default function MoreInfo() {
                 Go Back
             </Button>
 
-            {error && <p className="text-xl text-red-600 mb-6">{error}</p>}
-            {info && (
-                <div className="bg-white rounded-lg shadow-lg p-8 max-w-3xl mx-auto">
-                    <h1 className="text-3xl font-bold text-gray-900">{info.topic}</h1>
-                    <p className="text-md text-gray-700 mt-3 mb-6">{info.summary}</p>
-                    {info.sections.map(renderSection)}
+
+
+            <div>
+                <div className="flex justify-center space-x-2 mb-6">
+                    <Switch
+                        id="comprehensive-view-switch"
+                        onCheckedChange={handleSwitchChange}
+                    />
+                    <Label htmlFor="comprehensive-view-switch">Comprehensive View</Label>
+
                 </div>
-            )}
+
+
+
+
+                {info && isComprehensiveView && (
+                    <div className="bg-white rounded-lg shadow-lg p-8 max-w-3xl mx-auto">
+                        <h1 className="text-3xl font-bold text-gray-900">{info.topic}</h1>
+                        <p className="text-md text-gray-700 mt-3 mb-6">{info.summary}</p>
+                        {info.sections.map(renderSection)}
+                    </div>
+                )}
+
+
+                {info && !isComprehensiveView && (
+                    <div className="bg-white rounded-lg shadow-lg p-8 max-w-3xl mx-auto">
+                        <h1 className="text-3xl font-bold text-gray-900">{info.topic}</h1>
+                        <p className="text-md text-gray-700 mt-3 mb-6">{info.summary}</p>
+                        {/* Render current section */}
+                        {renderSection(info.sections[currentSectionIndex])}
+
+                        {/* Navigation Buttons */}
+                        <div className="flex justify-between mt-6">
+                            <Button onClick={handlePrevious} disabled={currentSectionIndex === 0} variant="outline" className="px-4 py-2 text-gray-700 hover:text-white hover:bg-indigo-600 transition-all duration-300">
+                                Previous
+                            </Button>
+                            <Button onClick={handleNext} disabled={currentSectionIndex === info.sections.length - 1} variant="outline" className="px-4 py-2 text-gray-700 hover:text-white hover:bg-indigo-600 transition-all duration-300">
+                                Next
+                            </Button>
+                        </div>
+                    </div>
+                )}
+
+            </div>
+
+
+
+
         </div>
-
     );
-}
-
-
-const example = {
-    "topic": "Software Development Fundamentals: Software Development Lifecycle (SDLC) Methodologies (Agile, Waterfall)",
-    "summary": "This cram sheet covers the key differences and similarities between Waterfall and Agile SDLC methodologies, focusing on their core principles, terminology, and practical applications.",
-    "sections": [
-        {
-            "heading": "Key Concepts",
-            "points": [
-                {
-                    "point": "Overview: SDLC methodologies define the structured process for planning, creating, testing, and deploying software.  Waterfall and Agile are two prominent approaches."
-                },
-                {
-                    "point": "Fundamental Principles: Waterfall emphasizes sequential phases; Agile prioritizes iterative development, collaboration, and flexibility."
-                }
-            ]
-        },
-        {
-            "heading": "Important Terminology",
-            "points": [
-                {
-                    "term": "Waterfall",
-                    "definition": "A linear, sequential approach where each phase must be completed before the next begins.  Changes are difficult and costly to implement."
-                },
-                {
-                    "term": "Agile",
-                    "definition": "An iterative and incremental approach emphasizing flexibility, collaboration, and continuous improvement.  It involves short development cycles (sprints) and frequent feedback."
-                },
-                {
-                    "term": "Sprint",
-                    "definition": "A short, time-boxed iteration in Agile development, typically 2-4 weeks."
-                },
-                {
-                    "term": "Scrum",
-                    "definition": "A specific Agile framework using sprints, daily stand-ups, sprint reviews, and retrospectives."
-                },
-                {
-                    "term": "Requirements Gathering",
-                    "definition": "The process of defining the functionalities and features of a software project."
-                },
-                {
-                    "term": "Testing",
-                    "definition": "The process of verifying that the software meets the specified requirements and functions correctly."
-                },
-                {
-                    "term": "Deployment",
-                    "definition": "The process of releasing the software to end-users."
-                },
-                {
-                    "term": "Backlog",
-                    "definition": "An ordered list of features or tasks to be implemented in an Agile project."
-                },
-                {
-                    "term": "Daily Stand-up",
-                    "definition": "A short daily meeting in Scrum where team members discuss progress and obstacles."
-                }
-            ]
-        },
-        {
-            "heading": "Syntax and Structure",
-            "points": [
-                {
-                    "point": "Waterfall:  Requirements -> Design -> Implementation -> Testing -> Deployment -> Maintenance"
-                },
-                {
-                    "point": "Agile: Iterative cycles of Planning -> Design -> Development -> Testing -> Review -> Retrospective (repeated until project completion)"
-                }
-            ]
-        },
-        {
-            "heading": "Common Techniques or Methods",
-            "points": [
-                {
-                    "technique": "Waterfall",
-                    "description": "Sequential phases, detailed documentation upfront.",
-                    "example": "Building a large-scale, fixed-scope infrastructure project"
-                },
-                {
-                    "technique": "Agile (Scrum)",
-                    "description": "Short iterations, daily stand-ups, sprint reviews.",
-                    "example": "Developing a mobile app with evolving requirements"
-                }
-            ]
-        },
-        {
-            "heading": "Best Practices",
-            "points": [
-                {
-                    "point": "Waterfall: Thorough requirements analysis, detailed documentation, clear communication."
-                },
-                {
-                    "point": "Agile: Embrace change, prioritize collaboration, focus on delivering working software frequently, conduct thorough retrospectives."
-                }
-            ]
-        },
-        {
-            "heading": "Use Cases/Applications",
-            "points": [
-                {
-                    "use_case": "Waterfall",
-                    "details": "Suitable for projects with well-defined requirements, minimal anticipated changes, and where a rigid structure is beneficial."
-                },
-                {
-                    "use_case": "Agile",
-                    "details": "Best for projects with evolving requirements, requiring frequent feedback, needing quick iterations and adaptation."
-                }
-            ]
-        },
-        {
-            "heading": "Resources for Further Study",
-            "points": [
-                {
-                    "resource": "Agile Manifesto",
-                    "link": "https://agilemanifesto.org/"
-                },
-                {
-                    "resource": "Scrum Guide",
-                    "link": "https://scrumguides.org/"
-                },
-                {
-                    "resource": "Udemy/Coursera Agile courses",
-                    "link": "Search for \"Agile\" or \"Scrum\" on Udemy or Coursera"
-                }
-            ]
-        },
-        {
-            "heading": "Examples",
-            "examples": [
-                {
-                    "example_1": "Waterfall: Building a bridge - the steps are largely predetermined and changes are costly."
-                },
-                {
-                    "example_2": "Agile: Developing a social media app - user feedback is essential and features may evolve during development."
-                },
-                {
-                    "example_3": "Agile: Developing a social media app - user feedback is essential and features may evolve during development."
-                }
-            ]
-        },
-        {
-            "heading": "Additional Notes",
-            "points": [
-                {
-                    "point": "Hybrid approaches combining elements of both Waterfall and Agile are common in practice.  The choice of methodology depends on project specifics and organizational context."
-                }
-            ]
-        }
-    ]
 }

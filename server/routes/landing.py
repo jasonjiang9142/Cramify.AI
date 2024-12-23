@@ -2,7 +2,7 @@ from flask import Blueprint
 from flask import Flask, request, jsonify, make_response
 from functions.gemini import description_into_json, parse_json_from_text
 from functions.website_scrape import scrape_website
-from functions.tree import json_into_tree
+from functions.tree import json_into_tree, get_bottom_layer_nodes
 from flask_cors import CORS
 import json
 from functions.cassandra import insert_cassandra, get_cassandra_query
@@ -67,6 +67,10 @@ def convert_link():
                 insert_cassandra(url, pretty_json)
 
             syllabus_tree = json_into_tree(pretty_json)
+
+            print('--')
+            print(get_bottom_layer_nodes(syllabus_tree))
+
             return jsonify(syllabus_tree.to_dict()), 200 
         
         except Exception as e:

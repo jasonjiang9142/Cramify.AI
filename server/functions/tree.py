@@ -1,5 +1,6 @@
 import json
 import re
+from collections import deque
 
 class Tree: 
     def __init__(self, name=None, children=None):
@@ -35,7 +36,7 @@ def split_topic_into_subtopics(topic):
 
 def map_json_to_tree(json_data):
     root = Tree(name="Learning Syllabus", children=[])
-    
+
     for tech_name, tech_info in json_data['learning_syllabus'].items():
         # Create a node for the technology (e.g., "Java", "Python")
         tech_node = Tree(name=tech_name, children=[])
@@ -50,6 +51,7 @@ def map_json_to_tree(json_data):
                 name = tech_name + ': ' + subtopic 
                 subtopic_node = Tree(name=name)
                 topic_node.children.append(subtopic_node)
+
             
             tech_node.children.append(topic_node)
         
@@ -57,6 +59,25 @@ def map_json_to_tree(json_data):
         root.children.append(tech_node)
 
     return root
+
+
+def get_bottom_layer_nodes(tree):
+    """Return the bottom layer nodes (leaf nodes) from left to right."""
+    if not tree:
+        return []
+    
+    queue = deque([tree])  # Initialize a queue for BFS
+    bottom_nodes = []
+
+    while queue:
+        node = queue.popleft()
+        if not node.children:  # Check if the node is a leaf node
+            bottom_nodes.append(node.name)
+        else:
+            for child in node.children:
+                queue.append(child)
+    
+    return bottom_nodes
 
 
 def load_json(filename='output.json'):

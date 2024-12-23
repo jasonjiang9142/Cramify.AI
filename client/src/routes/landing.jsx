@@ -113,19 +113,19 @@ export default function Landing() {
 
 
     return (
-        <div className="min-h-screen grid grid-cols-2 items-center bg-gradient-to-br from-gray-100 to-blue-50 p-8">
+        <div className="min-h-screen grid grid-cols-1 md:grid-cols-2 items-center bg-gradient-to-br from-gray-100 to-blue-50 p-8">
             {/* Heading Section */}
-            <div className="flex flex-col items-center justify-center space-y-8">
-                <h1 className="text-5xl font-extrabold bg-gradient-to-r from-blue-500 to-purple-600 text-transparent bg-clip-text drop-shadow-lg">
+            <div className="flex flex-col items-center justify-center space-y-8 text-center md:text-left">
+                <h1 className="text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-purple-600 drop-shadow-lg">
                     JobsAI
                 </h1>
-                <p className="text-center text-lg text-gray-700 max-w-md leading-relaxed">
+                <p className="text-lg text-gray-700 max-w-md mx-auto md:mx-0 leading-relaxed">
                     Transform job descriptions and links into actionable insights. Leverage the power of AI to analyze and generate study sheets tailored to your career goals.
                 </p>
             </div>
 
             {/* Form Section */}
-            <div className="w-full max-w-lg bg-white shadow-lg rounded-xl p-8 space-y-8 transform transition-all hover:scale-105 duration-300">
+            <div className="w-full max-w-lg bg-white shadow-xl rounded-xl p-8 space-y-8 transform transition-all hover:scale-105 duration-300">
                 {/* URL Submission Form */}
                 <form onSubmit={handleSubmitLink} className="space-y-6">
                     <h2 className="text-2xl font-semibold text-gray-800">Submit Job URL</h2>
@@ -135,7 +135,7 @@ export default function Landing() {
                         className="w-full border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                         aria-label="Job URL Input"
                     />
-                    <Button type="submit" variant="default" className="w-full bg-blue-500 text-white py-3 rounded-lg hover:bg-blue-600">
+                    <Button type="submit" variant="default" className="w-full bg-blue-500 text-white py-3 rounded-lg hover:bg-blue-600 transition duration-300">
                         Analyze URL
                     </Button>
                 </form>
@@ -152,7 +152,7 @@ export default function Landing() {
                         className="w-full border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 min-h-32"
                         aria-label="Job Description Input"
                     />
-                    <Button type="submit" variant="default" className="w-full bg-blue-500 text-white py-3 rounded-lg hover:bg-blue-600">
+                    <Button type="submit" variant="default" className="w-full bg-blue-500 text-white py-3 rounded-lg hover:bg-blue-600 transition duration-300">
                         Analyze Description
                     </Button>
                 </form>

@@ -24,12 +24,14 @@
 
 ## Preview
 <p align="center" width="100%">
-  <img src="preview/Preview1.png" width="60%"/>
-  <img src="preview/Preview2.png" width="60%"/>
+  <img src="preview/Preview1.png" width="49%"/>
+    <img src="preview/Preview2.png" width="49%"/>
 </p>
 
 <p align="center" width="100%">
-  <img src="preview/Preview3.png" width="48%"/>
+  <img src="preview/Preview3.png" width="65%"/>
+  <img src="preview/Preview5.png" width="48%"/>
+  <img src="preview/Preview6.png" width="48%"/>
   <img src="preview/Preview4.png" width="48%"/>
 </p>
 
@@ -43,49 +45,48 @@ Click the image to watch the demo video on YouTube.
 
 1. Clone the repository:  
    ```bash
-   git clone https://github.com/jasonjiang9142/WordHunter.git
-   cd WordHunter
+   git clone https://github.com/jasonjiang9142/jobsAI.git
+   cd client
    ```
 
-2. Build the project using the Makefile:  
+2. Install dependencies for the client and server:
+   Frontend 
    ```bash
-   make
+   cd client
+   npm install
+   npm run dev
    ```
 
-3. Run the program:  
+   Backend 
    ```bash
-   ./main
+   cd server
+   pip install -r requirements.txt
+   python index.py
    ```
 
-## Running Tests
-
-The project uses **Google Test (GTest)** for testing. Follow these steps to execute the tests:
-
-1. Navigate to the build directory:  
+4. Install and configure the database:
+   Redis:
    ```bash
-   cd build
+   sudo apt update
+   sudo apt install redis-server
+   sudo systemctl enable redis
+   sudo systemctl start redis
    ```
 
-2. Build the test suite:  
+   Apache Cassandra:
    ```bash
-   make
+   sudo apt update
+   sudo apt install cassandra
+   sudo systemctl enable cassandra
+   sudo systemctl start cassandra
    ```
 
-3. Run the tests:  
+   Verify installation:
    ```bash
-   ctest
+   redis-cli ping
+   cqlsh
    ```
 
-## How to Play
-
-1. Launch the game:  
-   ```bash
-   ./main
-   ```
-
-2. Follow the on-screen prompts to choose a difficulty level and start the game.  
-3. Form words by connecting adjacent letters on the grid.  
-4. Submit words to earn points and try to maximize your score before time runs out.  
 
 ## Contributing
 
@@ -97,5 +98,5 @@ This project is licensed under the [MIT License](LICENSE).
 
 ## Acknowledgments
 
-- Thanks to the creators of **Google Test** for providing a robust testing framework.  
-- Inspired by classic word-finding games and puzzles.
+- Thanks to the creators of React, Flask, and TailwindCSS for providing powerful tools for development.
+- Inspired by tools that help streamline the job preparation process.

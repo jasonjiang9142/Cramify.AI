@@ -64,6 +64,12 @@ This project requires an **API key** for accessing the **Google Gemini API**. Th
 3. Save and Close
    Make sure to save the changes before closing the file.
 
+### **Setup Instructions**
+   1. **In the `utils.js` file under /client/src/lib/utils.js**  
+   Replace the the provided backend server host from flask to the variable
+   ```bash
+   export const backendhost = "http://127.0.0.1:5000";
+   ```
 
 
 ## Installation
@@ -115,13 +121,9 @@ This project requires an **API key** for accessing the **Google Gemini API**. Th
 
 ## Contributing
 
-Contributions are welcome! If you’d like to improve Word Hunter, please fork the repository, make changes, and submit a pull request.  
+Contributions are welcome! If you’d like to improve JobsAI, please fork the repository, make changes, and submit a pull request.  
 
 ## License
 
 This project is licensed under the [MIT License](LICENSE).  
 
-## Acknowledgments
-
-- Thanks to the creators of React, Flask, and TailwindCSS for providing powerful tools for development.
-- Inspired by tools that help streamline the job preparation process.

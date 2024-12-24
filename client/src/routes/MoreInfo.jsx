@@ -5,13 +5,14 @@ import { useNavigate } from "react-router-dom";
 import { Switch } from "@/components/ui/switch"
 import { Label } from "@/components/ui/label"
 import { use } from "react";
+import { backendhost } from "@/lib/utils";
 
 
 export default function MoreInfo() {
     const location = useLocation();
     const name = location.state || '';
 
-    const localhost = "http://127.0.0.1:5000";
+    const backendhost = "http://127.0.0.1:5000";
     const navigate = useNavigate();
 
 
@@ -26,7 +27,7 @@ export default function MoreInfo() {
         const getData = async () => {
             try {
                 setLoading(true);
-                const response = await fetch(localhost + "/api/moreinfo", {
+                const response = await fetch(backendhost + "/api/moreinfo", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",

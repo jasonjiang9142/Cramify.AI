@@ -3,26 +3,9 @@ import { useLocation } from "react-router-dom";
 import Tree from "react-d3-tree";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { wrapText, getLeafNodes } from "@/lib/functions";
 
 const renderCustomNode = ({ nodeDatum, navigate }) => {
-
-    // Function to split text into multiple lines if it's too long (e.g., 20 chars per line)
-    const wrapText = (text, maxLineLength) => {
-        const words = text.split(" ");
-        const lines = [];
-        let currentLine = "";
-
-        words.forEach((word) => {
-            if ((currentLine + word).length <= maxLineLength) {
-                currentLine += `${word} `;
-            } else {
-                lines.push(currentLine.trim());
-                currentLine = `${word} `;
-            }
-        });
-        lines.push(currentLine.trim());
-        return lines;
-    };
 
     const lines = wrapText(nodeDatum.name, 20); // Wrap text
     const maxLineWidth = Math.max(...lines.map(line => line.length));
@@ -33,10 +16,8 @@ const renderCustomNode = ({ nodeDatum, navigate }) => {
     const handleClick = () => {
         console.log(nodeDatum.name)
         const updatedName = nodeDatum.name.replace(/\//g, '-')
-
         navigate(`/mapping/${updatedName}`, { state: nodeDatum.name }); // Dynamically navigate based on the node's name or id
     };
-
 
 
     return (
@@ -72,12 +53,6 @@ const renderCustomNode = ({ nodeDatum, navigate }) => {
     );
 };
 
-// Dynamically alternate node size (y-axis) based on index at the same level
-const customNodeSize = (nodeDatum) => {
-    const nodeIndex = nodeDatum.parent ? nodeDatum.parent.children.indexOf(nodeDatum) : 0; // Find index of node in its parent's children
-    const ySize = nodeIndex % 2 === 0 ? 250 : 200;
-    return { x: 200, y: ySize };
-};
 
 const Mapping = () => {
     const location = useLocation();
@@ -94,26 +69,6 @@ const Mapping = () => {
     const [translation, setTranslation] = useState({ x: window.innerWidth / 2, y: 50 });
 
     const [zoom, setZoom] = useState(0.9); // Initial zoom level
-
-
-    // Function to get all leaf nodes in the tree
-    const getLeafNodes = (node) => {
-        const leaves = [];
-
-        // Recursive function to traverse the tree
-        const traverse = (currentNode) => {
-            if (!currentNode.children || currentNode.children.length === 0) {
-                // If no children, it's a leaf node
-                leaves.push(currentNode.name);
-            } else {
-                // Otherwise, keep traversing its children
-                currentNode.children.forEach(child => traverse(child));
-            }
-        };
-
-        traverse(node);
-        return leaves;
-    };
 
     // used to create the roadmap once selected node is initalized 
     useEffect(() => {
@@ -203,7 +158,6 @@ const Mapping = () => {
             setFilteredTreeData([subtree]); // Only display the selected subtree
         }
 
-
     };
 
 
@@ -230,7 +184,6 @@ const Mapping = () => {
         const updatedName = nodeDatum.replace(/\//g, '-'); // Sanitize the name to fit URL format
         navigate(`/mapping/${updatedName}`, { state: nodeDatum });
     };
-
 
 
     // Define zoom limits

@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea"
 import { Input } from "@/components/ui/input"
+import { backendhost } from "@/lib/utils";
+import { isValidURL } from "@/lib/functions";
 
 
 export default function Landing() {
@@ -10,16 +12,6 @@ export default function Landing() {
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
 
-    const isValidURL = (string) => {
-        try {
-            new URL(string);
-            return true;
-        } catch (_) {
-            return false;
-        }
-    };
-
-    const localhost = "http://127.0.0.1:5000";
 
     // Handle form submission for link 
     const handleSubmitLink = async (e) => {
@@ -36,7 +28,7 @@ export default function Landing() {
         try {
             setLoading(true)
             // Send POST request to backend
-            const response = await fetch(localhost + "/api/jobs/link", {
+            const response = await fetch(backendhost + "/api/jobs/link", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -68,7 +60,7 @@ export default function Landing() {
 
         try {
             // Send POST request to backend
-            const response = await fetch(localhost + "/api/jobs/text", {
+            const response = await fetch(backendhost + "/api/jobs/text", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

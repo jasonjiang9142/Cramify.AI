@@ -109,7 +109,7 @@ export default function Landing() {
             {/* Heading Section */}
             <div className="flex flex-col items-center justify-center space-y-8 text-center md:text-left">
                 <h1 className="text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-purple-600 drop-shadow-lg">
-                    JobsAI
+                    Cramify.AI
                 </h1>
                 <p className="text-lg text-gray-700 max-w-md mx-auto md:mx-0 leading-relaxed">
                     Transform job descriptions and links into actionable insights. Leverage the power of AI to analyze and generate study sheets tailored to your career goals.

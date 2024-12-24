@@ -1,10 +1,10 @@
-# Jobs AI 
+# Cramify AI 
 ![License](https://img.shields.io/badge/license-MIT-green)
 ![Docs](https://img.shields.io/badge/docs-read-blue)
-![Repo Size](https://img.shields.io/github/repo-size/jasonjiang9142/jobsAI)
+![Repo Size](https://img.shields.io/github/repo-size/jasonjiang9142/cramify.ai)
 
 
-**Jobs AI** is an AI-powered application that converts job descriptions into concise, structured cram/study sheets to help users prepare for job applications and interviews effectively.
+**Cramify AI** is an AI-powered application that converts job descriptions into concise, structured cram/study sheets to help users prepare for job applications and interviews effectively.
 
 ## Features
 
@@ -76,7 +76,7 @@ This project requires an **API key** for accessing the **Google Gemini API**. Th
 
 1. Clone the repository:  
    ```bash
-   git clone https://github.com/jasonjiang9142/jobsAI.git
+   git clone https://github.com/jasonjiang9142/cramify.ai.git
    cd client
    ```
 
